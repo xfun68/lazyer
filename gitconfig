@@ -1,0 +1,23 @@
+[user]
+	name = xfun68
+	email = xfun68@gmail.com
+[github]
+	user = xfun68
+	token = 32cdfd74703f29e79a265479a5dc35c1
+[core]
+	autocrlf = input
+	editor = vim
+[merge]
+	tool = vimdiff
+[alias]
+	st = status
+	ci = commit
+	co = checkout
+	br = branch
+	unstage = reset HEAD --
+[color]
+	branch = auto
+	diff = auto
+	interactive = auto
+	status = auto
+	ui = auto
