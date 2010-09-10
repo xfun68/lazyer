@@ -1,0 +1,81 @@
+#######
+# 进入uos目录时自动检测export.sh
+#######
+is_set=false
+PS1_bak="$PS1"
+
+#isAbsDir()
+#{
+#   ch=`expr substr $1 1 1`
+#   [ "$ch" = "/" -o "$ch" = "~" ] && return 0
+#   return 1
+#}
+
+checkExport()
+{
+    if [ -f $1/export.sh ]
+    then
+        if $is_set && [ "$UOS_BASE" = "$1" ]
+        then
+            return 0
+        fi
+
+        command cd $1
+
+        . export.sh
+        PS1=`echo $PS1_bak | sed "s/w/w\n$(basename $1)/"`
+        export PS1="$PS1"
+
+        [ -f set_env.sh ] && . set_env.sh
+        is_set=true
+
+        return 0
+    fi
+
+    return 1
+}
+
+cd()
+{
+    if [ ! -n "$1" ]
+    then
+        export PS1="$PS1_bak"
+        command cd
+        is_set=false
+        return
+    fi
+
+    if [ ! -d "$1" ]
+    then
+        command cd $1
+        return
+    fi
+
+    set_ok=false
+    cur_path=$(pwd)
+
+    command cd $1
+    abs_path=$(pwd)
+    cd_path=$(pwd -P)
+    command cd $cur_path
+
+    while [ -n $cd_path -a "$cd_path" != "." -a "$cd_path" != "/" ]
+    do
+        if checkExport $cd_path
+        then
+            set_ok=true
+            break
+        fi
+
+        cd_path=$(dirname $cd_path)
+    done
+
+    command cd $abs_path
+
+    if ! $set_ok
+    then
+        is_set=false
+        export PS1="$PS1_bak"
+    fi
+}
+
