@@ -10,10 +10,14 @@
 [merge]
 	tool = vimdiff
 [alias]
-	st = status
-	ci = commit
-	co = checkout
-	br = branch
+    st = status -s
+    ci = commit
+    co = checkout
+    br = branch
+    oneline = log --pretty=oneline --since='2 days ago' --abbrev-commit
+    onelog = log -p -1 --abbrev-commit
+    glog = log --graph --oneline --abbrev-commit --decorate --pretty='%h %ci %Cgreen%s%Creset <%aN>'
+    l = log --graph --oneline --abbrev-commit --decorate
 	unstage = reset HEAD --
 [color]
 	branch = auto
