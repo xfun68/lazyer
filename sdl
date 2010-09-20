@@ -1,0 +1,32 @@
+#!/bin/sh
+
+case "$TERM" in
+msys)
+CONTEXT_COLOR="[37m"
+ADD_COLOR="[32m"
+DELETE_COLOR="[31m"
+LOCATION_COLOR="[36m"
+INDEX_COLOR="[35m"
+NORM_COLOR="[0m"
+;;
+*)
+CONTEXT_COLOR=`tput setaf 7`
+ADD_COLOR=`tput setaf 2`
+DELETE_COLOR=`tput setaf 1`
+LOCATION_COLOR=`tput setaf 6`
+FILE_COLOR=`tput setaf 3`
+INDEX_COLOR=`tput setaf 5`
+NORM_COLOR=`tput sgr0`
+;;
+esac
+
+svn diff $* |
+sed -e "s/^+[^+].*/${ADD_COLOR}&${NORM_COLOR}/g" \
+    -e "s/^-[^-].*/${DELETE_COLOR}&${NORM_COLOR}/g" \
+    -e "s/^[-+]\{3\}.*/${FILE_COLOR}&${FILE_COLOR}/g" \
+    -e "s/^@@.*/${LOCATION_COLOR}&${NORM_COLOR}/g" \
+    -e "s/^[iI]ndex.*/${INDEX_COLOR}&${NORM_COLOR}/g" \
+    -e "s/.*/${CONTEXT_COLOR}&${NORM_COLOR}/g" \
+    -e "s/\r//g" |
+${PAGER:-less -QRS}
+

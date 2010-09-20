@@ -45,7 +45,7 @@ cd()
         return
     fi
 
-    if [ ! -d "$1" ]
+    if [ ! -d "$1" -a "$1" != "-" ]
     then
         command cd $1
         return
